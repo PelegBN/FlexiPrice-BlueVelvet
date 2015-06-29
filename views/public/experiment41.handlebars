@@ -1,0 +1,534 @@
+<!-- views/layouts/experiment.handlebars -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="User Authentication">
+  <meta name="author" content="">
+
+  <title>Experiment</title>
+  <script scr="https://restapi.surveygizmo.com/head/survey"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/runningExperimentStyle.css">
+  <link href='http://fonts.googleapis.com/css?family=Dosis:400' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Orbitron' rel='stylesheet' type='text/css'>
+
+
+ </head>
+<body>
+  <section id="wrapper"> 
+
+      <section id="top">
+        <section id="scoreArea">
+          Your Current Score is: <article id="score"></article> 
+        </section>
+        <section id="walletArea">
+          Your current Wallet: <article id="wallet"></article> 
+        </section>
+      </section>
+      
+       <section id="gizmoContainer">
+<script type="text/javascript" >document.write('<script src="http' + ( ("https:" == document.location.protocol) ? "s" : "") + '://www.surveygizmo.com/s3/2211089/How-much-is?__output=embedjs&__ref=' + escape(document.location.origin + document.location.pathname) + '" type="text/javascript" ></scr'  + 'ipt>');</script><noscript>This survey is powered by SurveyGizmo's <a href="http://www.surveygizmo.com">online survey software</a>. <a href="http://www.surveygizmo.com/s3/2211089/How-much-is?jsfallback=true">Please take my survey now</a></noscript>
+      </section>
+          
+      <section id="formArea"> 
+                 <section id="objContainer">
+              <label>{{details.1.aboveProducts}}</label><br>
+          </section>         
+      </section>
+      
+          <article class="submitStyle" id="continueBTN" onclick="goToRating()">Continue</article>
+ </section>  
+</body>
+</html>
+
+<script>
+
+
+
+var lastScore;
+var questionNum;
+var question = {
+  user_id:"",
+  products:[],
+  title:"",
+  answer:"",
+  numOfProducts:0
+};
+
+var sessionID;
+
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+        window.onload = function() {
+          
+
+          if (typeof(Storage) != "undefined") {
+                  
+                if (sessionStorage.getItem("wallet") === null) {
+                    sessionStorage.setItem("wallet", {{details.1.starting_wallet}});
+                }
+                document.getElementById("wallet").innerHTML = sessionStorage.getItem("wallet");
+
+                if (sessionStorage.getItem("iteration") === null) {
+                    sessionStorage.setItem("iteration", "{{iteration_id}}");
+                }
+
+                if (sessionStorage.getItem("name") === null) {
+                    sessionStorage.setItem("name", "{{name}}");
+                }
+
+                if (sessionStorage.getItem("score") === null) {
+                    sessionStorage.setItem("score", 0);
+                }
+
+
+                if (sessionStorage.getItem("questionNumber") === null) {
+                    sessionStorage.setItem("questionNumber", 0);
+                }
+
+
+                var tempSessionID = getParameterByName('sg_sessionid');
+                if(tempSessionID !== "") {
+                  if (sessionStorage.getItem("sessionID") === null) {
+                    sessionStorage.setItem("sessionID", tempSessionID);
+                    sessionID = sessionStorage.getItem("sessionID");
+                  }
+                }
+                
+
+
+
+            } else {
+                document.getElementById("wallet").innerHTML = "Sorry, your browser does not support Web Storage...";
+            }
+          try {
+            var id = document.getElementsByClassName("sg-type-script")[0].innerText;
+            document.getElementsByClassName("sg-type-script")[0].style.visibility = "hidden";
+            //var score = document.getElementsByClassName("sg-question-options")[0].innerText;
+            var score = 0;
+            var numberPattern = /\d+/g;
+
+            if (score) {
+              lastScore = score;
+            }
+            else if(score == null) {
+              lastScore = 0;
+            }
+            sessionStorage.setItem("score", lastScore);
+            document.getElementById("score").innerHTML = sessionStorage.getItem("score");
+            
+
+            //Getting Question Number
+            questionNum = document.getElementsByClassName("sg-question-number")[0].innerText;
+            questionNum = (questionNum).replace(/[^0-9]/g, '');
+
+              if (questionNum != null) {
+                if (sessionStorage.getItem("question"+questionNum) === null) {
+                    var title = document.getElementsByClassName("sg-question-title")[0].innerText;
+                    question[title] = title;
+                    sessionStorage.setItem("question"+questionNum, question);
+                }
+              }
+
+          } 
+          catch(err) {
+            //Getting Question Number
+            questionNum = document.getElementsByClassName("sg-question-number")[0].innerText;
+            questionNum = (questionNum).replace(/[^0-9]/g, '');
+            console.log(questionNum);
+            if (questionNum == "")
+            {
+              questionNum = document.getElementsByClassName("sg-question-number")[1];
+              if (questionNum != null)
+              {
+                questionNum = questionNum.innerText;
+                questionNum = (questionNum).replace(/[^0-9]/g, '');
+              }
+              document.getElementById("continueBTN").style.display = "block";
+            }
+
+            if (questionNum != null) {
+            if (sessionStorage.getItem("question"+questionNum) === null) {
+                var title;
+                if (questionNum == 1) title = document.getElementsByClassName("sg-question-title")[0].innerText;
+                if(questionNum > 1) title = document.getElementsByClassName("sg-question-title")[0].innerText;
+
+                if(questionNum.length == 1)
+                {
+                  title = title.substring(3, title.length);
+                }
+
+                if(questionNum.length == 2)
+                {
+                  title = title.substring(4, title.length);
+                }
+
+
+                question["title"] = title;
+                sessionStorage.setItem("question"+questionNum, JSON.stringify(question));
+            }
+          }
+            
+
+            if(questionNum > 1)
+            {
+              // var score = document.getElementsByClassName("sg-question-options")[0].innerText;
+              // document.getElementsByClassName("sg-question-options")[0].style.visibility = "hidden";
+              // var numberPattern = /\d+/g;
+              //score = score.match(numberPattern);
+
+              var score = 0;
+                if (score) {
+                  lastScore = score;
+                }
+                else if(score == null) {
+                  if (lastScore == null) lastScore = 0;
+                }
+
+              sessionStorage.setItem("questionNumber", JSON.parse(sessionStorage.getItem("questionNumber"))+1);
+            }
+
+            if (questionNum == 1)
+            {
+              lastScore = 0;
+              sessionStorage.setItem("questionNumber", JSON.parse(sessionStorage.getItem("questionNumber"))+1);
+            }
+
+            if (questionNum == "")
+            {
+              var score = document.getElementsByClassName("sg-question-options")[0].innerText;
+              document.getElementsByClassName("sg-question-options")[0].style.visibility = "hidden";
+              lastScore = score;
+              document.getElementById("continueBTN").style.display = "block";
+            }
+
+
+            sessionStorage.setItem("score", lastScore);
+            document.getElementById("score").innerHTML = sessionStorage.getItem("score");
+
+
+          }
+          document.body.style.background = "#2A2E3E";
+          //document.getElementsByClassName("btn-default")[0].className = "";
+          document.getElementById("continueBTN").className = "submitStyle";
+          document.getElementsByClassName("sg-survey")[0].style.borderRadius = "10px";
+
+          
+          showProducts();
+        };
+
+
+        //Adding products to session storage + page           
+        function showProducts(){
+
+          var container = document.getElementById('objContainer');
+          {{#each details}}
+              
+              if (sessionStorage.getItem("product"+{{product_id}}) === null) {
+               
+                var temp = {
+                  product_id: {{product_id}},
+                  name: "{{name}}",
+                  min_price: (Math.random() * ({{value}} - {{min_price}}) + {{min_price}}).toFixed(2),
+                  revealed_price:"",
+                  rating:"",
+                  subjective_price:[],
+                  paid_price:"",
+                  path: "{{path}}", 
+                  avilable: false
+                };
+                sessionStorage.setItem("product"+{{product_id}}, JSON.stringify(temp));
+              }
+
+            var sessionProduct = JSON.parse(sessionStorage.getItem("product"+{{product_id}}));
+
+            var tempPrice = sessionProduct["min_price"];
+            var tempActive = sessionProduct["avilable"];
+
+            var product = document.createElement('article');
+
+            if(tempActive == false) product.className = "product";
+            else product.className = 'productBought';
+
+            product.setAttribute("id", "product"+{{product_id}});
+            var link = document.createElement('h5');
+
+            $(product).click(function(event){
+                event.preventDefault();
+                paymentAlgorithm({{product_id}});
+            });
+
+            link.innerHTML = "{{name}}";
+
+            product.appendChild(link);
+            container.appendChild(product);
+
+          if({{show_prices}})
+          {
+              var price = document.createElement('h3');
+              price.innerText = tempPrice;
+              product.appendChild(price);       
+          }
+          {{/each}}
+
+        }
+
+
+        function paymentAlgorithm(productId) {
+          
+          var temp = JSON.parse(sessionStorage.getItem("product"+productId));
+
+          var path = temp["path"];
+          var value = temp["min_price"];
+          var productName = temp["name"];
+
+          if(temp["avilable"] === true)
+          {            
+            window.open(path, '_blank');
+            question["products"].push(temp);
+            question["numOfProducts"]++;
+            sessionStorage.setItem("question"+questionNum, JSON.stringify(question));
+            return;
+          }
+
+          switch({{details.1.show_prices}})
+          {
+            case 1:
+            {
+                 if (confirm("{{details.1.showPricesON}}") == true) {
+                    if((sessionStorage.getItem("wallet") - value) > 0)
+                    {
+                      //Updating Wallet and setting product to be avilable
+                      window.open(path, '_blank');
+                      sessionStorage.setItem("wallet", (sessionStorage.getItem("wallet") - value).toFixed(2));
+                      document.getElementById("wallet").innerHTML = sessionStorage.getItem("wallet");
+
+                      temp["avilable"] = true;
+                      temp["paid_price"] = value;
+                      sessionStorage.setItem("product"+productId, JSON.stringify(temp));
+
+                      question["numOfProducts"]++;
+                      question["products"].push(temp);
+                      sessionStorage.setItem("question"+questionNum, JSON.stringify(question));
+
+                      document.getElementById('product'+productId).className = 'productBought';
+                    }
+                    else {
+                      alert("Sorry, but you don't have enough money");
+                    }
+                  } else {
+                      
+                  }
+                  break;
+            }
+            case 0:
+            {
+              makingAPurchase (productId,path,value, productName);
+              break;
+            }
+          }
+    
+        }
+
+        //In case the "show prices" is off
+        function makingAPurchase (productId, path,value, productName) {
+          switch ({{details.1.open_negotiation}})
+          {
+            case 1:
+            {
+                openNegPop(productId, path, productName, value);
+                break;
+            }
+            case 0:
+            {
+                switch({{details.1.use_min_price}})
+                {
+                  case 1:
+                  {
+                    useMinPriceOn(productId,path,value, productName);
+                    break;
+                  }
+                  case 0:
+                  {
+                    useMinPriceOff(productId,path,value, productName);
+                    break;
+                  }
+                }
+                break;
+            }
+          }
+        }
+
+        //Open negotiation is on
+        function openNegPop(productId, path, productName, value) {  
+          console.log("openNegPop");
+          var price = prompt("{{details.1.openNegotiation}}");
+          if (price == "") openNegPop(productId, path, productName);
+
+          else{
+            if (price !== null) {
+              if((sessionStorage.getItem("wallet") - price) > 0)
+              {
+                //Updating wallet and setting product to be avilabe
+                window.open(path, '_blank');
+                sessionStorage.setItem("wallet", (sessionStorage.getItem("wallet") - price).toFixed(2));
+                document.getElementById("wallet").innerHTML = sessionStorage.getItem("wallet");
+
+                var temp = JSON.parse(sessionStorage.getItem("product"+productId));
+                temp["avilable"] = true;
+                temp["subjective_price"] = price;
+                temp["paid_price"] = price;
+
+                sessionStorage.setItem("product"+productId, JSON.stringify(temp));
+
+                question["products"].push(temp);
+                question["numOfProducts"]++;
+                sessionStorage.setItem("question"+questionNum, JSON.stringify(question));
+
+                document.getElementById('product'+productId).className = 'productBought';
+              }
+                else {
+                      alert("Sorry, but you don't have enough money");
+                    }
+            }
+            else {}
+          }
+        }
+
+        //Open negotiation off + use min price on
+        function useMinPriceOn(productId, path, value, productName){
+          console.log("useMinPriceOn");
+          var count = {{details.1.max_tries}};
+          var done = false;
+          var tempProduct;
+
+          while (count > 0 && done==false)
+          {
+            var price = prompt("{{details.1.minPriceON}}");
+            if (price == "") {done = true;}
+
+            else{
+              if (price !== null) {
+                  if(price >= value) {
+                    if((sessionStorage.getItem("wallet") - value) > 0)
+                    {
+                      //Updating wallet and setting product to be avilabe
+                      window.open(path, '_blank');
+                      sessionStorage.setItem("wallet", (sessionStorage.getItem("wallet") - value).toFixed(2));
+                      document.getElementById("wallet").innerHTML = sessionStorage.getItem("wallet");
+
+                      tempProduct = JSON.parse(sessionStorage.getItem("product"+productId));
+                      tempProduct["avilable"] = true;
+                      tempProduct["subjective_price"].push(price);
+                      tempProduct["paid_price"] = value;
+
+                      sessionStorage.setItem("product"+productId, JSON.stringify(tempProduct));
+                      
+                      
+                      question["numOfProducts"]++;
+                      question["products"].push(tempProduct);
+                      sessionStorage.setItem("question"+questionNum, JSON.stringify(question));
+                      done = true;
+
+                      document.getElementById('product'+productId).className = 'productBought';
+                    }
+                      else {
+                      alert("Sorry, but you don't have enough money");
+                    }
+                  }
+                  else {
+                    count--;
+                    alert("{{details.1.priceTooLow}}");
+                    
+                    tempProduct = JSON.parse(sessionStorage.getItem("product"+productId));
+                    tempProduct["subjective_price"].push(price);
+
+                    sessionStorage.setItem("product"+productId, JSON.stringify(tempProduct));
+
+                  }
+              }
+              else {done = true;}
+            }
+          }
+          if (count == 0 && done == false)
+          {
+            document.getElementById('sg_NextButton').click();
+          }
+
+        }
+
+        //Open negotiation off + use min price off
+        function useMinPriceOff(productId, path, value, productName){
+          console.log("useMinPriceOff");
+          var count = {{details.1.max_tries}};
+          var done = false;
+          var tempProduct;
+
+          while (count > 0 && done==false)
+          {
+            var price = prompt("Enter a price");
+            if (price == "") {done = true;}
+
+            else{
+              if (price !== null) {
+                  if(price >= value) {
+                    if((sessionStorage.getItem("wallet") - value) > 0)
+                    {
+                      //Updating wallet and setting product to be avilabe
+                      window.open(path, '_blank');
+                      sessionStorage.setItem("wallet", (sessionStorage.getItem("wallet") - price).toFixed(2));
+                      document.getElementById("wallet").innerHTML = sessionStorage.getItem("wallet");
+
+                      tempProduct = JSON.parse(sessionStorage.getItem("product"+productId));
+                      tempProduct["avilable"] = true;
+                      tempProduct["subjective_price"].push(price);
+                      tempProduct["paid_price"] = value;
+
+                      sessionStorage.setItem("product"+productId, JSON.stringify(tempProduct));
+                                            
+                      question["numOfProducts"]++;
+                      question["products"].push(tempProduct);
+                      sessionStorage.setItem("question"+questionNum, JSON.stringify(question));
+                      done = true;
+
+                      document.getElementById('product'+productId).className = 'productBought';
+                    }
+                      else {
+                      alert("Sorry, but you don't have enough money");
+                    }
+                  }
+                  else {
+                    count--;
+                    alert("{{details.1.priceTooLow}}");
+                    
+                    tempProduct = JSON.parse(sessionStorage.getItem("product"+productId));
+                    tempProduct["subjective_price"].push(price);
+
+                    sessionStorage.setItem("product"+productId, JSON.stringify(tempProduct));
+
+                  }
+              }
+              else {done = true;}
+            }
+          }
+          if (count == 0 && done == false)
+          {
+            document.getElementById('sg_NextButton').click();
+          }
+        }
+
+        function goToRating(){
+          window.location.href = "/rating:"+{{experimentId}};
+        }
+</script>

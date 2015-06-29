@@ -1,0 +1,23 @@
+<!-- views/forgot.handlebars -->
+
+
+<section id="wrapper2">
+  <article id="logo_login"></article>
+  <p></p> <br>
+  <h1 id="regTitle">A Reset Email Will Be Sent To This Address</h1>
+
+  <section id="forgotSection">
+   
+    <form id="forgot-password" action="/forgot" method="post">
+      <input type="text" name="email" placeholder="Enter Email" required class="form-control textStyle signinInput"/>
+      
+      <input class="blockedInput" disabled />
+      <input type="submit" class="buttonArea" value="GO"/>
+   </form>
+   <div id="local">
+      <a href="/signin" class="regBtn" role="button">Go Back</a>
+   </div>
+
+  </section>
+
+</section>

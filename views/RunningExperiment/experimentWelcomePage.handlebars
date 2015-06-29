@@ -1,0 +1,97 @@
+<!-- views/layouts/experiment.handlebars -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="User Authentication">
+  <meta name="author" content="">
+
+  <title>Experiment</title>
+
+   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+   <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/runningExperimentStyle.css">
+    <link href='//fonts.googleapis.com/css?family=Dosis:400' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Orbitron' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Play:400,700' rel='stylesheet' type='text/css'>
+<script type="text/javascript">
+
+  window.onload = function() { 
+    var myString = "{{intro}}";
+    myString = $("<div />").html(myString).text();
+    $("#introArea").append(myString);
+
+    if({{private}})
+    {
+      document.getElementById('theWall').style.display = 'block';
+      document.getElementById('introArea').style.display = 'none';
+      document.getElementById('loginArea').style.display = 'none';
+    }
+
+    if(!{{private}})
+    {
+       document.getElementById('theWall').style.display = 'none';
+      document.getElementById('introArea').style.display = 'block';
+      document.getElementById('loginArea').style.display = 'block';
+
+    }
+
+  }
+
+  function checkPassword()
+  { 
+    var tempPass = document.getElementById('password').value;
+    {{#iteration}}
+     
+      if (tempPass === '{{password}}')
+      {
+        document.getElementById('theWall').style.display = 'none';
+        document.getElementById('introArea').style.display = 'block';
+        document.getElementById('loginArea').style.display = 'block';
+      }
+      else {
+        document.getElementById('message').style.display = "block";
+      }
+    {{/iteration}}
+  }
+</script>
+
+
+ </head>
+<body>
+  <section id="wrapper">
+        <section id="top">
+          <article id="logo"></article>
+        </section>
+
+        <section id="theWall">
+          <section class="passwordArea">
+            
+            <h3 class="title">Enter Password</h3><br>
+            <input class="form-control textStyle inputStyle" type="password" name="name" placeholder="PASSWORD" id="password"><br>
+            <button class="btn btn-default submitStyle" value="Submit" onclick="checkPassword()">Submit</button>
+
+            
+          </section>
+
+          <section id="message">
+              <article><p class="messageIntro">You entered a wrong password.</p> Please try again...</article><br>
+          </section>
+       </section>
+
+        
+          <section id="introArea">  </section>
+
+            <section id="loginArea"> 
+              <form action="/SubmitToExperiment?exp_id={{experimentId}}&iteration_id={{iteration_id}}" method="post">
+                 <input class="form-control textStyle inputStyle" type="text" name="name" placeholder="NAME"><br>
+                 <input class="btn btn-default submitStyle" type="submit" value="Submit">
+              </form>   
+            </section>
+      
+  </section>  
+</body>
+</html>

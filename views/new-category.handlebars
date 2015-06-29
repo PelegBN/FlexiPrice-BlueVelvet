@@ -1,0 +1,157 @@
+<script type="text/javascript">
+    //dialog
+window.onload = function () {
+  
+  // Get the buttons.
+  var styledModalBtn = document.getElementById('submitBTN');
+  var closeBtn = document.getElementById('closeBTN');
+  
+  // Get the dialogs.
+  var styledModal = document.getElementById('styledModal');
+
+  // Setup Event Listeners
+  styledModalBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    
+    styledModal.showModal();
+  });
+  
+
+    closeBtn.addEventListener('click', function(e) {
+      this.parentNode.close();
+    });
+  
+};
+</script>
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" id="top-nav-bottom">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                  <a class="navbar-brand" href="/" id="logo"></a>
+            </div>
+            <!-- Top Menu Items -->
+            <ul class="nav navbar-right top-nav">
+                
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{user.email}} <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="/logout"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav side-nav">
+                    <li>
+                        <a href="/"><i class="fa fa-fw fa-home"></i> Home Page</a>
+                    </li>
+                    <li>
+                        <a href="javascript:" data-toggle="collapse" data-target="#ExpCollapse"><i class="fa fa-fw fa-briefcase"></i> Experiments <i class="fa fa-fw fa-caret-down"></i></a>
+                        <ul id="ExpCollapse" class="collapse">
+                            <li>
+                                <a href="/NewExperiment">Create a New</a>
+                            </li>
+                            <li>
+                                <a href="/Experiments">View Existing</a>
+                            </li>
+                        </ul>
+                    </li>
+                     <li>
+                        <a href="javascript:" data-toggle="collapse" data-target="#CatCollapse"><i class="fa fa-fw fa-tasks"></i> Catalogs <i class="fa fa-fw fa-caret-down"></i></a>
+                        <ul id="CatCollapse" class="collapse.in">
+                            <li>
+                                <a href="/NewCategory" class="subMenuActive">Create a New</a>
+                            </li>
+                            <li>
+                                <a href="/Categories">View Existing</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="/contact"><i class="fa fa-fw fa-send"></i> Contact</a>
+                    </li>
+                     <li>
+                        <a href="Help.pdf" target="_blank"><i class="fa fa-fw fa-info"></i> Help</a>
+                    </li>
+                     <li id="surveyGizmoLI">
+                        <a href="http://www.surveygizmo.com" target="_blank"><i class="fa fa-fw fa-link"></i> <span class="survey">survey</span><span class="gizmo">gizmo</span></a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </nav>
+
+        <div id="page-wrapper">
+
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                  <ol class="breadcrumb BreadCrumbsStyle">
+                            <li>
+                                <a href="/"> <i class="fa fa-home"></i> Home Page</a>
+                            </li>
+                            &nbsp<i class="fa fa-angle-right nextBreadcrumb"> </i>&nbsp
+                            <li class="active">
+                                <i class="fa fa-tasks"></i> New Catalog
+                            </li>
+                   </ol>
+                
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header groovyBorder">
+                           Create a New <small>Catalog</small>
+                        </h1>
+                    </div>
+                </div>
+                <!-- /.row -->
+
+				 <form action="/SubmitCategory" method="post" role="form">
+	                 
+	                 <section id="newCatStepOne">
+			                 <div class="form-group">
+	                                <label>Catalog's Name: </label>
+	                                  <input type="text" class="form-control formStyle" name="name" required>
+			                 </div>
+			                 
+			                 <div class="form-group">
+	                                <label>Catalog's Description: </label>
+	                                <textarea class="form-control textStyle formStyle" name="message" rows="10"></textarea>
+	                                
+                            </div>
+                              
+                              <section class="otherButtonsSection">
+						                  	 <input class="btn btn-default okStyle" value="Next" type="submit" id="submitBTN">
+						                  	 <a href="/Categories"><article class="btn btn-default cancelStyle">Cancel</article> </a>
+						     </section>
+                              
+                            <dialog id="styledModal">
+                                <p>You've successfully create a new catalog! <br> But... a new catalog is a lonley place.<br> Now, create at least one product</p>
+                                <button class="btn btn-default okStyle" id="closeBTN">Okay</button>
+                            </dialog>
+			                 
+	                 </section>
+
+                </form>
+
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->

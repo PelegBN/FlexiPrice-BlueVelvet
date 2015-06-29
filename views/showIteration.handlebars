@@ -1,0 +1,207 @@
+   <script type="text/javascript">
+          window.onload = function() {iterationPressed();}
+          {{#iteration}}
+          $(document).ready(function() {
+			    if({{private}})
+			    {
+			        document.getElementById("PrivateOnOffSwitch").checked = true;
+                    document.getElementById("generateBTN").style.pointerEvents = 'auto';
+                    document.getElementById('password').disabled = false;
+			    }
+                if(!{{private}})
+                {
+                    document.getElementById("generateBTN").style.pointerEvents = 'none';
+                    document.getElementById('password').disabled = true;
+                }
+			});
+          	{{/iteration}}
+   </script>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" id="top-nav-bottom">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                  <a class="navbar-brand" href="/" id="logo"></a>
+            </div>
+            <!-- Top Menu Items -->
+            <ul class="nav navbar-right top-nav">
+                
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{user.email}} <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="/logout"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav side-nav">
+                    <li>
+                        <a href="/"><i class="fa fa-fw fa-home"></i> Home Page</a>
+                    </li>
+                    <li>
+                        <a href="javascript:" data-toggle="collapse" data-target="#ExpCollapse"><i class="fa fa-fw fa-briefcase"></i> Experiments <i class="fa fa-fw fa-caret-down"></i></a>
+                        <ul id="ExpCollapse" class="collapse.in">
+                            <li>
+                                <a href="/NewExperiment">Create a New</a>
+                            </li>
+                            <li>
+                                <a href="/Experiments" class="subMenuActive">View Existing</a>
+                            </li>
+                        </ul>
+                    </li>
+                     <li>
+                        <a href="javascript:" data-toggle="collapse" data-target="#CatCollapse"><i class="fa fa-fw fa-tasks"></i> Catalogs <i class="fa fa-fw fa-caret-down"></i></a>
+                        <ul id="CatCollapse" class="collapse">
+                            <li>
+                                <a href="/NewCategory">Create a New</a>
+                            </li>
+                            <li>
+                                <a href="/Categories">View Existing</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="/contact"><i class="fa fa-fw fa-send"></i> Contact</a>
+                    </li>
+                     <li>
+                        <a href="Help.pdf" target="_blank"><i class="fa fa-fw fa-info"></i> Help</a>
+                    </li>
+                    <li id="surveyGizmoLI">
+                        <a href="http://www.surveygizmo.com" target="_blank"><i class="fa fa-fw fa-link"></i> <span class="survey">survey</span><span class="gizmo">gizmo</span></a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </nav>
+
+        <div id="page-wrapper">
+
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                  <ol class="breadcrumb BreadCrumbsStyle">
+                            <li>
+                                <a href="/"> <i class="fa fa-home"></i> Home Page</a>
+                            </li>
+                            &nbsp<i class="fa fa-angle-right nextBreadcrumb"> </i>&nbsp
+                            <li>
+                                <a href="/Experiments"> <i class="fa fa-briefcase"></i> View Experiments</a>
+                            </li>
+                            &nbsp<i class="fa fa-angle-right nextBreadcrumb"> </i>&nbsp
+                            {{#iteration}}
+                            <li class="active">
+                                <i class="fa fa-briefcase"></i> {{experiment_name}}
+                            </li>
+                            {{/iteration}}
+                   </ol>
+                
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header groovyBorder">
+                            Iteration <small>Edit</small>
+                        </h1>
+                    </div>
+                </div>
+                <!-- /.row -->
+	                 <section id="newExperiment">
+	                 	
+	                 	<article id="generalTab" class="btn btn-default tabStyle" > General </article>
+	                 	<article id="ParticipantsTab" class="btn btn-default tabStyle" > Exam UI</article>
+	                 	<article id="IterationTab" class="btn btn-default tabStyleActive" > Iteration </article>
+	                 	
+	                 		<section id="generalSection"> </section>
+							<section id="participantsSection"> </section> 
+ 							
+ 							<section id="iterationSection">
+ 								{{#iteration}}
+			                  	      <section class="expFormLeftSide">
+										                 <div class="form-group">
+								                                <label>Date of Last "Run":&nbsp {{date}}</label>
+										                 </div>
+
+										                 <div class="form-group">
+								                                <label>Subjects:&nbsp {{subjects}}</label>
+										                 </div>
+
+										                 <div class="form-group">
+								                                <label>Iteration Link:&nbsp</label>
+								                                <article id="newIterationLink" class="iterationLinkStyle"> {{link}}</article>
+										                 </div>
+										                 
+										                 
+														<div class="clear"></div>
+						                        </section>
+						               
+						                        <section class="expFormRightSide">
+
+                                                            <div class="form-group">
+                                                                <label>Comments </label>
+                                                                <textarea class="form-control textStyle formStyle" name="description" rows="2" id="iterationComment">{{comment}}</textarea>
+                                                            </div>
+						                 {{/iteration}}   	
+															<div class="form-group">			
+																	<label>&nbsp &nbsp&nbsp Private</label> <br>
+															       <section class="onoffswitch">
+																		    <input type="checkbox" name="PrivateOnOffSwitch" class="onoffswitch-checkbox" id="PrivateOnOffSwitch" onclick="privateSwitch()">
+																		    <label class="onoffswitch-label" for="PrivateOnOffSwitch">
+																		        <span class="onoffswitch-inner"></span>
+																		        <span class="onoffswitch-switch"></span>
+																		    </label>
+																	</section>
+															</div> 
+										{{#iteration}}
+													<div class="form-group input-group">
+													    <input type="text" name="password" class="form-control textStyle passwordStyle" id="password" value='{{password}}'/>
+													    <span class="input-group-btn">
+													        <article class="btn btn-default genPassStyle" onclick="randomString()" id="generateBTN">Generate</article>
+													    </span>
+													</div>
+								          		</section>
+
+								          		
+
+								        
+						                 <section class="buttonsSection">
+						                 	<input type="submit" class="btn btn-default submitContactStyle" onclick="submitModifiedIteration({{experiment_id}},{{iteration_id}})" value="Submit">
+						                  	<a class="btn btn-default cancelStyle" href="/ModifyExperiment:{{experiment_id}}">Cancel</a>
+                                            
+                                         </section>
+                                         {{/iteration}}
+						          </section>
+			            </section>
+
+
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <script type="text/javascript">
+    	
+    	
+
+    </script>
+
+
+
+
+

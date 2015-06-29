@@ -1,0 +1,285 @@
+<script type="text/javascript"> 
+        $(document).ready(function() {
+        {{#product}}
+        switch("{{type}}") {
+            case "URL":
+                document.getElementById('weburl').disabled = false;
+                document.getElementById("cb2").checked = true;
+                document.getElementById("weburl").value = "{{path}}";
+                document.getElementById('imgPlace').src = "images/Transparent.gif";
+                website();
+                break;
+            case "Image":
+                document.getElementById("cb3").checked = true;
+                document.getElementById("file_url").value = "{{path}}";
+                document.getElementById('fileUpload').disabled = false;
+                document.getElementById('imgPlace').src = "{{path}}";
+                document.getElementById('weburl').disabled = true;
+                document.getElementById('weburl').value = ""; 
+                document.getElementById('fileUpload').disabled = false;
+
+                document.getElementById('noneSelected').style.color = "#757E8C";
+                document.getElementById('urlSelected').style.color = "#757E8C";
+                document.getElementById('fileSelected').style.color = "#EEE";
+                break;
+            case "None":
+                document.getElementById("noneSelected").checked = true;
+                document.getElementById('imgPlace').hidden = true;
+                none();
+                break;
+        }
+        {{/product}}
+    }); 
+</script>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" id="top-nav-bottom">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                  <a class="navbar-brand" href="/" id="logo"></a>
+            </div>
+            <!-- Top Menu Items -->
+            <ul class="nav navbar-right top-nav">
+                
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{user.email}} <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="/logout"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav side-nav">
+                    <li>
+                        <a href="/"><i class="fa fa-fw fa-home"></i> Home Page</a>
+                    </li>
+                    <li>
+                        <a href="javascript:" data-toggle="collapse" data-target="#ExpCollapse"><i class="fa fa-fw fa-briefcase"></i> Experiments <i class="fa fa-fw fa-caret-down"></i></a>
+                        <ul id="ExpCollapse" class="collapse">
+                            <li>
+                                <a href="/NewExperiment">Create a New</a>
+                            </li>
+                            <li>
+                                <a href="/Experiments">View Existing</a>
+                            </li>
+                        </ul>
+                    </li>
+                     <li>
+                        <a href="javascript:" data-toggle="collapse" data-target="#CatCollapse"><i class="fa fa-fw fa-tasks"></i> Catalogs <i class="fa fa-fw fa-caret-down"></i></a>
+                        <ul id="CatCollapse" class="collapse.in">
+                            <li>
+                                <a href="/NewCategory">Create a New</a>
+                            </li>
+                            <li>
+                                <a href="/Categories" class="subMenuActive">View Existing</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="/contact"><i class="fa fa-fw fa-send"></i> Contact</a>
+                    </li>
+                     <li>
+                        <a href="Help.pdf" target="_blank"><i class="fa fa-fw fa-info"></i> Help</a>
+                    </li>
+                    <li id="surveyGizmoLI">
+                        <a href="http://www.surveygizmo.com" target="_blank"><i class="fa fa-fw fa-link"></i> <span class="survey">survey</span><span class="gizmo">gizmo</span></a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </nav>
+
+        <div id="page-wrapper">
+
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                  <ol class="breadcrumb BreadCrumbsStyle">
+                            <li>
+                                <a href="/"> <i class="fa fa-home"></i> Home Page</a>
+                            </li>
+                            &nbsp<i class="fa fa-angle-right nextBreadcrumb"> </i>&nbsp
+                            <li>
+                                <a href="/Categories"> <i class="fa fa-fw fa-tasks"></i> View Catalogs</a>
+                            </li>
+                            &nbsp<i class="fa fa-angle-right nextBreadcrumb"> </i>&nbsp
+                            <li>
+                                 {{#category}} <a href="/ShowCategory:{{category_id}}"> <i class="fa fa-fw fa-tasks"></i>{{category_name}} </a> {{/category}} 
+                            </li>
+                             &nbsp<i class="fa fa-angle-right nextBreadcrumb"> </i>&nbsp
+                            <li class="active">
+                                <i class="fa fa-fw fa-tasks"></i> {{#product}} {{name}}
+                            </li>
+                   </ol>
+                
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header groovyBorder">
+                           Modify a <small>Product</small>
+                        </h1>
+                    </div>
+                </div>
+                <!-- /.row -->
+
+                 <form action="/ModifyProduct:{{product_id}}/:{{category_id}}" method="post" role="form">
+	                 
+	                 <section id="newProduct">
+	                 	<section class="formLeftSide">
+				                 <div class="form-group">
+		                                <label>Product's Name </label>
+		                                  <input type="text" class="form-control formStyle" name="name" value="{{name}}" required>
+				                 </div>
+				                 
+				                 <div class="form-group">
+		                                <label>Product's Description </label>
+		                                <textarea class="form-control textStyle formStyle" name="message" rows="10"> {{description}} </textarea>
+		                                
+	                            </div>
+	                            <section class="priceLeftSide">
+				                            <div class="form-group">
+					                                <label>Maximum Price </label>
+					                                  <input type="number" min="0" class="form-control formStyle" name="price" id="price" value="{{value}}" step="any" required>
+							                 </div>
+							      </section>
+							      
+							      <section class="priceRightSide">           
+							                   <div class="form-group">
+					                                <label>Minimun Price </label>
+					                                  <input type="number" min="0" class="form-control formStyle" name="MinPrice" id="MinPrice" value="{{min_price}}" step="any" required>
+							                 </div>
+	                            </section>
+	                            
+	                            <div class="clear"></div>
+                        </section>
+                            
+                        <section class="formRightSide">
+                        	<label>Product Type </label>
+                        	
+                        	<div class="form-group nonePad">
+                                <input class="dotBox" id="cb1" type="radio" name="productType" value="None" onclick="none()" checked="checked"> <label id="noneSelected" for="cb1">None (You can change this later)</label>
+                             </div>
+                        	
+                        	<div class="form-group">
+	                        	<input class="dotBox" id="cb2" type="radio" name="productType" value="URL" onclick="website()" ><label id="urlSelected" for="cb2">URL </label>
+	                        	<input class="form-control formStyle" type="url" name="webpage" id="weburl" disabled="disabled">
+                        	</div>
+                        	
+                        	
+                        	<section class="imgSubLeftSide">
+                        	<div class="form-group">
+                                <input class="dotBox" id="cb3" type="radio" name="productType" value="Image" onclick="fileup()"> <label id="fileSelected" for="cb3">Upload a File </label>
+                                <input type="file" class="file-input" id="fileUpload" name="fileUpload" disabled="disabled">
+                                <input type="hidden" id="file_url" name="file_url"/>
+
+                                
+                                	<img id="imgPlace">
+                                	</div>
+  
+                                </section>
+                                
+                                  <section class="otherButtonsSection">
+					              	    <input id="submitBTN" type="submit" class="btn btn-default submitContactStyle" name="myButton" value="Submit">
+                                        
+					              	    <a href="/ShowCategory:{{category_id}}"><article class="btn btn-default cancelStyle">Cancel</article> </a>   
+                                        {{/product}}
+					              </section>
+                                
+                            
+			            </section>    
+	                 </section>
+
+                </form>
+
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+<script type="text/javascript">
+
+$( "input[type='number']" ).change(function() {
+  var elementName = this.name;
+  switch (elementName){
+    case 'price':
+    {
+        document.getElementById("MinPrice").max = document.getElementById("price").value;
+        break;
+    }
+    case 'MinPrice':
+    {
+        document.getElementById("price").min = document.getElementById("MinPrice").value;
+        break;
+    }
+  }
+});
+
+(function() {
+    document.getElementById("fileUpload").onchange = function(){
+        var files = document.getElementById("fileUpload").files;
+        var file = files[0];
+        if(file == null){
+            alert("No file selected.");
+        }
+        else{
+            get_signed_request(file);
+        }
+    };
+})();
+
+
+function get_signed_request(file){
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/sign_s3?file_name="+file.name+"&file_type="+file.type);
+    xhr.onreadystatechange = function(){
+        if(xhr.readyState === 4){
+            if(xhr.status === 200){
+                var response = JSON.parse(xhr.responseText);
+                upload_file(file, response.signed_request, response.url);
+                
+            }
+            else{
+                alert("Could not get signed URL." + file.name);
+            }
+        }
+    };
+    xhr.send();
+}
+
+function upload_file(file, signed_request, url){
+    var xhr = new XMLHttpRequest();
+    xhr.open("PUT", signed_request);
+    xhr.setRequestHeader('x-amz-acl', 'public-read');
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            document.getElementById("imgPlace").src = url;
+            document.getElementById("file_url").value = url;
+            document.getElementById('submitBTN').disabled = false;
+            document.getElementById("submitBTN").className = "btn btn-default submitStyle";
+        }
+    };
+    xhr.onerror = function() {
+        alert("Could not upload file.");
+    };
+    xhr.send(file);
+}
+</script>
+
