@@ -60,6 +60,14 @@ tr.hover {
 
 input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 
+.exportIn{
+	font-size: 35px;
+}
+
+.exportIn:hover {
+	color:#649E86;
+}
+
 .export:hover {
 	color:#649E86;
 }

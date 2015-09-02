@@ -39,7 +39,9 @@ exports.newExperiment = function (user_id, details) {
     aboveProducts: details.msgAboveProducts,
     priceTooLow: details.msgPriceLow,
     ratingHeader: details.rateHeader,
-    ratingSubHeader: details.rateSubHeader
+    ratingSubHeader: details.rateSubHeader,
+    noMoneyInWallet: details.notEnoughMoney,
+    noMoneyInWalletTip: details.notEnoughMoneyTip
   };
 
   pool.getConnection(function (err, connection){
@@ -97,7 +99,9 @@ exports.updateExperiment = function (user_id, experiment_id, details) {
     aboveProducts: details.msgAboveProducts,
     priceTooLow: details.msgPriceLow,
     ratingHeader: details.rateHeader,
-    ratingSubHeader: details.rateSubHeader
+    ratingSubHeader: details.rateSubHeader,
+    noMoneyInWallet: details.notEnoughMoney,
+    noMoneyInWalletTip: details.notEnoughMoneyTip
   };
 
   pool.getConnection(function (err, connection){
@@ -256,7 +260,11 @@ exports.iterationDetails = function (details) {
     balance : details.balance,
     name: details.name,
     user_id: tempUserId,
-    sessionID: details.sessionID
+    sessionID: details.sessionID,
+    startTime: details.startTime,
+    endTime: details.endTime,
+    city: details.city,
+    userAgent: details.userAgent
   }
 
   pool.getConnection(function (err, connection){
@@ -284,6 +292,7 @@ pool.getConnection(function (err, connection){
     for (var i=0 ; i<details.numOfquestions ; i++){
       var postQuestion = {
         question_title: JSON.stringify(details["question_array["+i+"][title]"]).replace(/['"]+/g, ''),
+        answer: JSON.stringify(details["question_array["+i+"][answer]"])
       }
       connection.query('INSERT INTO flexiprice.questions SET ?', postQuestion, function (err, result) {
         if (err != null) {
@@ -415,9 +424,13 @@ exports.getIterationsDetails = function (iterationId) {
   var deferred = Q.defer();
  
    pool.getConnection(function (err, connection) {
-   var sql = 'SELECT * FROM flexiprice.users as users INNER JOIN questionToProduct as questionToProduct ON users.user_id=questionToProduct.userID ';
+    
+   var sql = 'SELECT * FROM flexiprice.users as users INNER JOIN questionToProduct as questionToProduct ';
+    sql += 'ON users.user_id=questionToProduct.userID ';
     sql += 'INNER JOIN questions as questions ON questionToProduct.questionID =questions.question_id ';
-    sql += 'INNER JOIN (select products.name as product_name, products.product_id from products) products ON questionToProduct.productID=products.product_id where users.iteration_id =?;';
+    sql += 'INNER JOIN (select products.name as product_name, products.product_id from products) products ';
+    sql += 'ON questionToProduct.productID=products.product_id where users.iteration_id =?;';
+
      connection.query(sql, iterationId , function (err, rows) {
     if (err!= null) {
       deferred.reject(new Error(err.body));
@@ -461,7 +474,7 @@ exports.getIterationsByUser = function (user_id) {
  
    pool.getConnection(function (err, connection) {
    var sql = 'SELECT * FROM flexiprice.iterations ';
-sql += 'inner JOIN (select experiments.experiment_name, experiments.user_id, experiments.experiment_id from experiments) experiments ';
+sql += 'inner JOIN (select experiments.experiment_name, experiments.user_id, experiments.experiment_id, experiments.max_tries from experiments) experiments ';
  sql+= 'where iterations.experiment_id = experiments.experiment_id and researcher_id=?;';
      connection.query(sql, user_id , function (err, rows) {
     if (err!= null) {
@@ -547,7 +560,7 @@ exports.getRateHaders = function (exp_id) {
   var deferred = Q.defer();
  
    pool.getConnection(function (err, connection) {
-   var sql = 'SELECT ratingHeader, ratingSubHeader FROM flexiprice.titlesNMessages where experimentID=?;';     
+   var sql = 'SELECT ratingHeader, ratingSubHeader, noMoneyInWalletTip FROM flexiprice.titlesNMessages where experimentID=?;';     
    connection.query(sql, exp_id , function (err, rows) {
     if (err!= null) {
       console.log("Error finding conclusion" + err);

@@ -295,6 +295,9 @@ function submitNewExperiment(){
     data.rateHeader = document.getElementById('rateHeader').value;
     data.rateSubHeader = document.getElementById('rateSubHeader').value;
 
+    data.notEnoughMoney = document.getElementById('notEnoughMoney').value;
+    data.notEnoughMoneyTip = document.getElementById('notEnoughMoneyTip').value;
+
     var request = $.ajax({
         url: "/SubmitExperiment",
         async: false,
@@ -343,7 +346,8 @@ function submitModifiedExperiment(exp_id){
     data.rateHeader = document.getElementById('rateHeader').value;
     data.rateSubHeader = document.getElementById('rateSubHeader').value;
 
-
+    data.notEnoughMoney = document.getElementById('notEnoughMoney').value;
+    data.notEnoughMoneyTip = document.getElementById('notEnoughMoneyTip').value;
 
     var request = $.ajax({
         url: "/SubmitModifiedExperiment:"+exp_id,

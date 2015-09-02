@@ -148,6 +148,7 @@ app.set('view engine', 'handlebars');
 
 //displays our homepage
 app.get('/',isLoggedIn, function(req, res){
+
    experimentsDB.getIterationsByUser(req.user.user_id)
     .then(function (itemsList) {
       if (itemsList) {
@@ -851,20 +852,19 @@ app.get('/experiment', function(req, res){
 });
 
 
-
-
-
-
 //Show Iteration page
-app.get('/iteration:id', isLoggedIn, function(req, res){
+app.get('/iteration', isLoggedIn, function(req, res){
 
-  var id = (req.params.id).replace(/[^0-9]/g, ''); ;
+  var urlPart = url.parse(req.url, true);
+  var query = urlPart.query;
+  var iteration_id = query.iterationId;
+  var tries = query.tries;
 
-    experimentsDB.getIteration(id)
+    experimentsDB.getIteration(iteration_id)
     .then(function (itemsList) {
       if (itemsList) {
 
-          res.render('showIteration', {user: req.user, iteration: itemsList});
+        res.render('showIteration', {user: req.user, iteration: itemsList, tries:tries});
         done(null, itemsList);
       }
       if (!itemsList) {
@@ -883,7 +883,7 @@ app.get('/rating:id', function(req, res){
   experimentsDB.getRateHaders(id)
       .then(function (headers) {
         if (headers) {
-          res.render('RunningExperiment/rating', {layout: false, header:headers[0].ratingHeader, subHeader:headers[0].ratingSubHeader,exp_id:id });
+          res.render('RunningExperiment/rating', {layout: false, header:headers[0].ratingHeader, subHeader:headers[0].ratingSubHeader,exp_id:id, noMoneyInWallet: headers[0].noMoneyInWalletTip });
           done(null, headers);
         }
         if (!headers) {
@@ -937,96 +937,120 @@ app.get('/Excel', isLoggedIn, function(req, res){
     conf.cols=[
         {
             caption:'Iteration ID',
-            type:'string',
+            type:'number',
             width:10
         },
         {
             caption:'User ID',
-            type:'string',
+            type:'number',
             width:10
         },
         {
             caption:'SessionID',
             type:'string',
-            width:10
+            width:40
+        },
+        {
+            caption:'Time Started',
+            type:'string',
+            width:20
+        },
+        {
+            caption:'Date Submitted',
+            type:'string',
+            width:20
+        },
+        {
+            caption:'City',
+            type:'string',
+            width:20,
+            beforeCellWrite:function(row, cellData, eOpt){
+              if (isEmpty(cellData)){
+                eOpt.cellType = 'string';
+                return 'N/A';
+              }
+              return cellData;
+            }
+        },
+        {
+            caption:'User Agent',
+            type:'string',
+            width:40,
+            beforeCellWrite:function(row, cellData, eOpt){
+              if (isEmpty(cellData)){
+                eOpt.cellType = 'string';
+                return 'N/A';
+              }
+              return cellData;
+            }
         },
         {
             caption:'Name',
             type:'string',
-            width:50
+            width:25
         },
         {
             caption:'Score',
             type:'number',
-            width:4
+            width:10
         },
         {
             caption:'Wallet',
             type:'number',
-            width:4
-        },
-        {
-            caption:'Question Title',
-            type:'string',
-            width:50
-        },
-        {
-            caption:'Product Name',
-            type:'string',
-            width:50
-        },       
-        {
-            caption:'Min Price',
-            type:'number',
-            width:4
-        },
-        {
-            caption:'Paid Price',
-            type:'number',
-            width:4
-        },
-        {
-            caption:'Revealed Price',
-            type:'number',
-            width:4
-        },
-        {
-            caption:'Rating',
-            type:'string',
-            width:50
-        }];
-
-        for(var i=0 ; i<tries ; i++){
-         conf.cols.push( {
-            caption:'Subjective Price',
-            type:'number',
             width:10
-          });
-        }
-
+        }];
 
         experimentsDB.getIterationsDetails(iteration_id)
             .then(function (itemsList) {
               if (itemsList) {
-
                   arr=[];
+                  var max = 0;
+                  var tempMax = 0;
+                  var counterMax = 0;
+                  var k=0;
+
                   for(i=0;i<itemsList.length;i++){
-                      iteration_id =itemsList[i].iteration_id;
-                      grade = itemsList[i].grade;
-                      balance = itemsList[i].balance;
-                      name = itemsList[i].name;
-                      userId = itemsList[i].user_id;
-                      min_price = itemsList[i].min_price;
-                      subjective_price = itemsList[i].subjective_price;
-                      revealed_price = itemsList[i].revealed_price;
-                      paid_price = itemsList[i].paid_price;
-                      question_title = itemsList[i].question_title;
-                      product_name = itemsList[i].product_name;
+                    tempMax = counterMax;
+                    
+                    var tempUser = itemsList[i].user_id;
+                    var a = [];
+                    while (tempUser == itemsList[k].user_id)
+                    {
+                      //console.log('i='+i+", k="+k+", item" + itemsList[k])
+                      if(i==k) {
+                        
+                        counterMax = 1;
+                        iteration_id = itemsList[i].iteration_id;
+                        grade = itemsList[i].grade;
+                        balance = itemsList[i].balance;
+                        name = itemsList[i].name;
+                        userId = itemsList[i].user_id;
+                        SessionID = itemsList[i].sessionID;
+                        startTime = itemsList[i].startTime;
+                        endTime = itemsList[i].endTime;
+                        city = itemsList[i].city;
+                        userAgent = itemsList[i].userAgent;
 
-                      rating = itemsList[i].rating;
-                      SessionID = itemsList[i].sessionID
+                        a = [iteration_id,userId, SessionID, startTime, endTime, city, userAgent ,name, grade, balance];
+                        if (tempMax > max) {
+                          max = tempMax;
+                          tempMax = 0;
+                        }
+                      }
+                      counterMax++;
+                      
+                      min_price = itemsList[k].min_price;
+                      subjective_price = itemsList[k].subjective_price;
+                      revealed_price = itemsList[k].revealed_price;
+                      paid_price = itemsList[k].paid_price;
+                      question_title = itemsList[k].question_title;
+                      product_name = itemsList[k].product_name;
+                      answer = itemsList[k].answer;
 
-                      a=[iteration_id,userId, SessionID, name, grade, balance, question_title, product_name, min_price, paid_price, revealed_price, rating];
+                      rating = itemsList[k].rating;
+                     
+                      
+                      a.push(question_title, answer, product_name, min_price, paid_price, revealed_price, rating);
                       
                       
                       var subjectiveArray = subjective_price.split(',');
@@ -1034,11 +1058,128 @@ app.get('/Excel', isLoggedIn, function(req, res){
                       for(var j=0 ; j<tries ; j++){
                         if (subjectiveArray[j] != null)
                           a.push((subjectiveArray[j]).replace(/[^0-9.]/g, ""));
-                        else a.push(0);
+                        else a.push("");
                       }
-                      arr.push(a);
+                      
+                      k++;
+                      console.log(a);
+                      if (itemsList[k] == null) {break;}
+                    }
+
+                    if (!isEmpty(a)) arr.push(a);
+
+                    if(itemsList[k] == null){
+                        break;
+                    }
                   }
-                  
+
+                  console.log("Max is:" + max);
+                  while (max > 0)
+                  { 
+                    conf.cols.push(
+                        {
+                            caption:'Question Title',
+                            type:'string',
+                            width:50,
+                            beforeCellWrite:function(row, cellData, eOpt){
+                              if (isEmpty(cellData)){
+                                eOpt.cellType = 'string';
+                                return 'N/A';
+                              }
+                              return cellData;
+                            }
+                        },
+                        {
+                            caption:'Question Answer',
+                            type:'string',
+                            width:50,
+                            beforeCellWrite:function(row, cellData, eOpt){
+                              if (isEmpty(cellData)){
+                                eOpt.cellType = 'string';
+                                return 'N/A';
+                              }
+                              return cellData;
+                            }
+                        },
+                        {
+                            caption:'Product Name',
+                            type:'string',
+                            width:50,
+                            beforeCellWrite:function(row, cellData, eOpt){
+                              if (isEmpty(cellData)){
+                                eOpt.cellType = 'string';
+                                return 'N/A';
+                              }
+                              return cellData;
+                            }
+                        },       
+                        {
+                            caption:'Min Price',
+                            type:'number',
+                            width:10,
+                            beforeCellWrite:function(row, cellData, eOpt){
+                              if (typeof cellData === 'undefined'){
+                                eOpt.cellType = 'string';
+                                return 'N/A';
+                              }
+                              return cellData;
+                            }
+                        },
+                        {
+                            caption:'Paid Price',
+                            type:'number',
+                            width:10,
+                            beforeCellWrite:function(row, cellData, eOpt){
+                              if (typeof cellData === 'undefined'){
+                                eOpt.cellType = 'string';
+                                return 'N/A';
+                              }
+                              return cellData;
+                            }
+                        },
+                        {
+                            caption:'Revealed Price',
+                            type:'number',
+                            width:10,
+                            beforeCellWrite:function(row, cellData, eOpt){
+                              if (typeof cellData === 'undefined'){
+                                eOpt.cellType = 'string';
+                                return 'N/A';
+                              }
+                              return cellData;
+                            }
+                        },
+                        {
+                            caption:'Rating',
+                            type:'number',
+                            width:10,
+                            beforeCellWrite:function(row, cellData, eOpt){
+                              if (isEmpty(cellData)){
+                                eOpt.cellType = 'string';
+                                return 'N/A';
+                              }
+                              return cellData;
+                            }
+                        }
+                      );
+
+                      for(var j=0 ; j<tries ; j++){
+                        conf.cols.push( {
+                            caption:'Subjective Price',
+                            type:'number',
+                            width:10,
+                            beforeCellWrite:function(row, cellData, eOpt){
+                              if (isEmpty(cellData)){
+                                eOpt.cellType = 'string';
+                                return 'N/A';
+                              }
+                              return cellData;
+                            }
+                          });
+                      }
+                    max--;
+                  }
+
                   conf.rows=arr;
 
                   var result = nodeExcel.execute(conf);
@@ -1056,6 +1197,26 @@ app.get('/Excel', isLoggedIn, function(req, res){
               console.log("**** Error: " + err.body);
              });
 });
+
+function isEmpty(obj) {
+
+    // null and undefined are "empty"
+    if (obj == null) return true;
+
+    // Assume if it has a length property with a non-zero value
+    // that that property is correct.
+    if (obj.length > 0)    return false;
+    if (obj.length === 0)  return true;
+
+    // Otherwise, does it have any properties of its own?
+    // Note that this doesn't handle
+    // toString and valueOf enumeration bugs in IE < 9
+    for (var key in obj) {
+        if (hasOwnProperty.call(obj, key)) return false;
+    }
+
+    return true;
+}
 
 //===============PORT=================
 var port = process.env.PORT || 5000; //select your port or let it pull from your .env file

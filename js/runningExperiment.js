@@ -182,7 +182,7 @@ function useMinPriceOff(productId, path, value, productName, max_tries){
     else {
       if (price !== null) {
         if(price >= value) {
-            if((sessionStorage.getItem("wallet") - value) > 0)
+            if((sessionStorage.getItem("wallet") - price) > 0)
             {
               //Updating wallet and setting product to be avilabe
               window.open(path, '_blank');
@@ -192,7 +192,7 @@ function useMinPriceOff(productId, path, value, productName, max_tries){
               tempProduct = JSON.parse(sessionStorage.getItem("product"+productId));
               tempProduct["avilable"] = true;
               tempProduct["subjective_price"].push(price);
-              tempProduct["paid_price"] = value;
+              tempProduct["paid_price"] = price;
 
               sessionStorage.setItem("product"+productId, JSON.stringify(tempProduct));
                                     
@@ -288,7 +288,8 @@ function startRating(){
 function checkValidTip(){
   var totalTip = 0;
   var tipWallet = sessionStorage.getItem("wallet");
-  for(var i=1;i<=JSON.parse(sessionStorage.getItem("questionNumber"));i++){
+  var i=1;
+  while (sessionStorage.getItem("question"+i)){
     var questionTemp = JSON.parse(sessionStorage.getItem("question"+i));
     var products = questionTemp["products"];
     for(var j=0; j<products.length; j++){
@@ -296,6 +297,7 @@ function checkValidTip(){
       var tip = document.getElementById("tip"+i+num).value;
       totalTip += JSON.parse(tip);
     }
+    i++;
   }
   //totalTip -= tip;
   console.log('Tip: ' + tip);
@@ -313,6 +315,20 @@ function checkValidTip(){
 function submitAllIterationData(exp_id){
   var totalTip = 0;
   //Getting Tip and rating
+
+  if (sessionStorage.getItem("endTime") === null) {
+            var currentTime = new Date()
+            var month = currentTime.getMonth() + 1;
+            var day = currentTime.getDate();
+            var year = currentTime.getFullYear();
+            
+            var hours = currentTime.getHours()
+            var minutes = currentTime.getMinutes()
+
+            var time = day + "/" + month + "/" + year + " " + hours +":"+minutes;
+
+            sessionStorage.setItem("endTime", time);
+  }
   
   var i=1;
   while (sessionStorage.getItem("question"+i)){
@@ -352,6 +368,11 @@ function submitAllIterationData(exp_id){
   data.grade = sessionStorage.getItem("score");
   data.balance = sessionStorage.getItem("wallet") - totalTip;
   data.question_array = questionsArray;
+
+  data.startTime = sessionStorage.getItem("startTime");
+  data.endTime = sessionStorage.getItem("endTime");
+  data.city = sessionStorage.getItem("city");
+  data.userAgent = sessionStorage.getItem("userAgent");
 
   var request = $.ajax({
     url: "/iterationSubmit",

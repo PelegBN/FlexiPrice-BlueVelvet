@@ -129,23 +129,27 @@
  							
  							<section id="iterationSection">
  								{{#iteration}}
-			                  	      <section class="expFormLeftSide">
-										                 <div class="form-group">
-								                                <label>Date of Last "Run":&nbsp {{date}}</label>
-										                 </div>
+			                  	    <section class="expFormLeftSide">
+						                 <div class="form-group">
+				                                <label>Date of Last "Run":&nbsp {{date}}</label>
+						                 </div>
 
-										                 <div class="form-group">
-								                                <label>Subjects:&nbsp {{subjects}}</label>
-										                 </div>
+						                 <div class="form-group">
+				                                <label>Subjects:&nbsp {{subjects}}</label>
+						                 </div>
 
-										                 <div class="form-group">
-								                                <label>Iteration Link:&nbsp</label>
-								                                <article id="newIterationLink" class="iterationLinkStyle"> {{link}}</article>
-										                 </div>
-										                 
-										                 
-														<div class="clear"></div>
-						                        </section>
+						                 <div class="form-group">
+				                                <label>Iteration Link:&nbsp</label>
+				                                <article id="newIterationLink" class="iterationLinkStyle"> {{link}}</article>
+						                 </div>
+
+                                         <div class="form-group"> 
+                                            <a href="/excel?iterationId={{iteration_id}}&tries={{../tries}}" class="exportIn"><i class="fa fa-fw fa-file-excel-o"></i>Export</a>
+                                         </div>
+						                 
+						                 
+										<div class="clear"></div>
+						            </section>
 						               
 						                        <section class="expFormRightSide">
 

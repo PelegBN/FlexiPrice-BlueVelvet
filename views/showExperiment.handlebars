@@ -298,6 +298,10 @@ $(document).ready(function() {
 								                                <label>Message for "Minimum Price" = "OFF" </label> 
 								                                  <input type="text" class="form-control formStyle" maxlength="60" id="msgMinPriceOff" value="{{minPriceOFF}}">
 										                 </div> 
+										                 <div class="form-group">
+								                                <label>Message for not enough money to buy a product </label> 
+								                                  <input type="text" class="form-control formStyle" maxlength="60" id="notEnoughMoney" value="{{noMoneyInWallet}}">
+										                 </div> 
 										                 
 										    </section>
 						                            
@@ -321,6 +325,10 @@ $(document).ready(function() {
 										                  <div class="form-group">
 								                                <label>Minor Heading for Rating Page</label>
 								                                  <input type="text" class="form-control formStyle" maxlength="60" id="rateSubHeader" value="{{ratingSubHeader}}">
+										                 </div>
+										                 <div class="form-group">
+								                                <label>Message for not enough money to tip this high </label> 
+								                                  <input type="text" class="form-control formStyle" maxlength="60" id="notEnoughMoneyTip" value="{{noMoneyInWalletTip}}">
 										                 </div> 
 									      </section>
 									      
@@ -357,7 +365,7 @@ $(document).ready(function() {
 				                                <tbody class="iterationTableStyle">
         				                               {{#each iterations}}
                                                         <tr class="detailsRow">
-	                                                        <td><a href="/iteration:{{iteration_id}}">{{date}}</a></td>
+	                                                        <td><a href="/iteration?iterationId={{iteration_id}}&tries={{../tries}}">{{date}}</a></td>
 	                                                        <td>{{subjects}}</td>
 	                                                        <td>{{comment}}</td>
 	                                                        <td>{{link}}</td>

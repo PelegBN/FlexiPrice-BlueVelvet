@@ -1,4 +1,91 @@
+<!-- views/layouts/experiment.handlebars -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="User Authentication">
+  <meta name="author" content="">
 
+  <title>Experiment</title>
+  <script scr="//restapi.surveygizmo.com/head/survey"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/runningExperimentStyle.css">
+  <link href='//fonts.googleapis.com/css?family=Dosis:400' rel='stylesheet' type='text/css'>
+  <link href='//fonts.googleapis.com/css?family=Play:400,700' rel='stylesheet' type='text/css'>
+  
+<script language="JavaScript" src="http://www.geoplugin.net/javascript.gp" type="text/javascript"></script>
+
+  
+  <script src="js/runningExperiment.js"></script>
+</head>
+<body>
+  <section id="wrapper"> 
+
+      <section id="top">
+        <section id="scoreArea">
+          Your Current Score is: <article id="score"></article> 
+        </section>
+        <section id="walletArea">
+          Your current Wallet: <article id="wallet"></article> 
+        </section>
+      </section>
+
+      <section id="dialogs">
+        <dialog class="styledModal" id="noMoneyDialog">
+              <p>{{details.1.noMoneyInWallet}}</p>
+              <button class="okayStyle" id="noMoneyBTN">Okay</button>
+        </dialog>
+
+        <dialog class="styleModallvl2" id="priceLowDialog">
+              <p>{{details.1.priceTooLow}}</p>
+              <button class="okayStyle" id="priceLowBTN">Okay</button>
+        </dialog>
+
+        <dialog class="styledModal" id="maxTriesDialog">
+              <p>You've maximized your tries. You can't answer this question.</p>
+              <button class="okayStyle" id="maxTriesBTN">Okay</button>
+        </dialog>
+
+        <dialog class="styledModal" id="showPricesDialog">
+              <p>{{details.1.showPricesON}}</p>
+              <button class="cancelStyle" id="showPricesNoBTN">No</button>
+              <button class="bidStyle" id="showPricesYesBTN">Yes</button>
+        </dialog>
+
+        <dialog class="styledModal" id="openNegotiationDialog">
+              <p>{{details.1.openNegotiation}}</p>
+              <input type="number" step="any" class="dialogInputStyle" name="openNegotiationPrice" id="openNegotiationPrice">
+              <button class="cancelStyle" id="openNegotiationCancelBTN">Cancel</button>
+              <button class="bidStyle" id="openNegotiationBidBTN">Bid</button>
+        </dialog>
+
+        <dialog class="styledModal" id="useMinimumOnDialog">
+              <p>{{details.1.minPriceON}}</p>
+              <input type="number" step="any" class="dialogInputStyle" name="useMinimumOnPrice" id="useMinimumOnPrice">
+              <button class="cancelStyle" id="useMinimumOnCancelBTN">Cancel</button>
+              <button class="bidStyle" id="useMinimumOnBidBTN">Bid</button>
+        </dialog>
+
+        <dialog class="styledModal" id="useMinimumOffDialog">
+              <p>{{details.1.minPriceOFF}}</p>
+              <input type="number" step="any" class="dialogInputStyle" name="useMinimumOffPrice" id="useMinimumOffPrice">
+              <button class="cancelStyle" id="useMinimumOffCancelBTN">Cancel</button>
+              <button class="bidStyle" id="useMinimumOffBidBTN">Bid</button>
+        </dialog>
+
+        <dialog class="styledModal" id="continueDialog">
+              <p>Almost Done! <br> Now, please, don't forget to continue to the rating page</p>
+              <button class="continueStyle" id="continueBTN">Okay</button>
+        </dialog>
+
+      </section>
+      
+      <section id="gizmoContainer"><script type="text/javascript" >document.write('<script src="http' + ( ("https:" == document.location.protocol) ? "s" : "") + '://www.surveygizmo.com/s3/2213918/Harry-Potter-copy?__output=embedjs&__ref=' + escape(document.location.origin + document.location.pathname) + '" type="text/javascript" ></scr'  + 'ipt>');</script><noscript>This survey is powered by SurveyGizmo's <a href="http://www.surveygizmo.com">online survey software</a>. <a href="http://www.surveygizmo.com/s3/2213918/Harry-Potter-copy?jsfallback=true">Please take my survey now</a></noscript>
       </section>
           
       <section id="formArea"> 
