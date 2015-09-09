@@ -1,7 +1,7 @@
 <script type="text/javascript">
 {{#items}}
     function createLink(){
-    var link = "https://flexiprice.herokuapp.com/experimentWelcomePage?exp_id="+{{experiment_id}}+"&iteration_id=";
+    var link = "flexiprice.herokuapp.com/experimentWelcomePage?exp_id="+{{experiment_id}}+"&iteration_id=";
     var token = Math.floor(Math.random() * 10000);
     link += token;
     console.log(link);
