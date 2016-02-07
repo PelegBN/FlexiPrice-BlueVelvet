@@ -128,6 +128,9 @@ window.onload = function() {
         }
 
 
+
+
+      //Getting Gizmo session ID
         var tempSessionID = getParameterByName('sg_sessionid');
         if(tempSessionID !== "") {
           if (sessionStorage.getItem("sessionID") === null) {
@@ -140,7 +143,7 @@ window.onload = function() {
         document.getElementById("wallet").innerHTML = "Sorry, your browser does not support Web Storage...";
     }
 
-    //Getting Question Number
+    //Getting Question Number and title from Gizmo
     questionNum = document.getElementsByClassName("sg-question-number")[0].innerText;
     questionNum = (questionNum).replace(/[^0-9]/g, '');
 
@@ -186,6 +189,7 @@ window.onload = function() {
     }
 
     //Question num 2 and up
+    //Get last question grade
     if(questionNum > 1)
     {
       var score = document.getElementsByClassName("sg-question-options")[0].innerText;
@@ -202,6 +206,7 @@ window.onload = function() {
     }
 
     //Last survey page
+    //Get last question grade
     if (questionNum == "")
     {
       var score = document.getElementsByClassName("sg-question-options")[0].innerText;

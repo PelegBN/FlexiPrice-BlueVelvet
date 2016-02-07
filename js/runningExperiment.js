@@ -1,4 +1,4 @@
-//Paymeny Functions
+//Payment Functions
 //Show Price ON
 function showPriceOnPayment(productId,path,value, productName){
   var temp = JSON.parse(sessionStorage.getItem("product"+productId));
